@@ -1,4 +1,4 @@
-const { User, Thought } = require("../models");
+const { User } = require("../models");
 
 module.exports = {
   // get all users
@@ -105,7 +105,7 @@ module.exports = {
       );
 
       if (!user) {
-        return res.status(404).json({ message: "No user found with that ID" });
+        return res.status(404).json({ message: 'No user found with that ID' });
       }
 
       res.json(user);
