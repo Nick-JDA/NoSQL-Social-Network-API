@@ -16,10 +16,11 @@ module.exports = {
   // get a single user by id and populated thought and friend data
   async getSingleUser(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.userId })
-        .select("-__v")
-        .populate("friends")
-        .populate("thoughts");
+      const user = await User.findOne({ _id: req.params.userId }).select(
+        "-__v"
+      );
+      // .populate("friends")
+      // .populate("thoughts")
 
       if (!user) {
         return res.status(404).json({ message: "No user with that ID" });
@@ -44,13 +45,15 @@ module.exports = {
   // put to update a user by its id
   async updateUser(req, res) {
     try {
-      const user = await User.findOneAndUpdate({ _id: req.params.userId },
-      { $set: req.body },
-      { runValidators: true, new: true });
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $set: req.body },
+        { runValidators: true, new: true }
+      );
 
       if (!user) {
         return res.status(404).json({ message: "User does not exist" });
-      }
+      } else res.json(user);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -102,12 +105,12 @@ module.exports = {
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $pull: { friends: { friendId: req.params.friendId } } },
+        { $pull: { friends: req.params.friendId } },
         { runValidators: true, new: true }
       );
 
       if (!user) {
-        return res.status(404).json({ message: 'No user found with that ID' });
+        return res.status(404).json({ message: "No user found with that ID" });
       }
 
       res.json(user);
